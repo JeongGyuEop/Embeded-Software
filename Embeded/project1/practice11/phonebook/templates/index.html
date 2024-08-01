@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>전화번호부</title>
+</head>
+<body>
+    <h2>연락처 추가</h2>
+    <form action="/add" method="post">
+        이름: <input type="text" name="name" required><br>
+        전화번호: <input type="text" name="phone" required><br>
+        이메일: <input type="email" name="email"><br>
+        <input type="submit" value="추가">
+    </form>
+    <h2>연락처 목록</h2>
+    <ul>
+        {% for contact in contacts %}
+        <li>{{ contact.name }} - {{ contact.phone }} - {{ contact.email }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+

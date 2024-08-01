@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule Manager</title>
+</head>
+<body>
+    <h2>Add New Schedule</h2>
+    <form id="scheduleForm">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" required><br>
+        <label for="desc">Description:</label><br>
+        <input type="text" id="desc" name="description"><br>
+        <label for="datetime">Date and Time (YYYY-MM-DD HH:MM:SS):</label><br>
+        <input type="text" id="datetime" name="datetime" required><br><br>
+        <input type="button" value="Add Schedule" onclick="addSchedule()">
+    </form>
+    <h2>Existing Schedules</h2>
+    <ul id="schedulesList">
+        <!-- Existing schedules will be listed here -->
+    </ul>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", fetchSchedules);
+
+        function addSchedule() {
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('desc').value;
+            const datetime = document.getElementById('datetime').value;
+
+            fetch('/schedules', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: title,
+                    description: description,
+                    datetime: datetime
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                fetchSchedules(); // Refresh the list after adding
+            })
+            .catch((error) => console.error('Error:', error));
+        }
+
+        function fetchSchedules() {
+            fetch("/schedules")
+                .then(response => response.json())
+                .then(data => {
+                    const list = document.getElementById("schedulesList");
+                    list.innerHTML = ''; // Clear existing list
+                    data.forEach(schedule => {
+                        const li = document.createElement("li");
+                        li.textContent = `${schedule.title} - ${schedule.description} - ${schedule.datetime}`;
+                        list.appendChild(li);
+                    });
+                });
+        }
+    </script>
+</body>
+</html>
+
